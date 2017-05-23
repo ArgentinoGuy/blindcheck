@@ -20,6 +20,8 @@ lat = None
 lng = None
 expireTs = None
 
+blindList = [1,2,3,4,5,6,7,8,9,10,13,21,35,37,39,48,56,63,77,79,92,95,96,100,109,111,116,123,133,138,139,140,141,142,147,163,170,179,185,190,203,213,215,216,223,234,246]
+
 def parse_csv():
   try:
     with open('account.csv', 'r') as csvfile:
@@ -33,7 +35,6 @@ def parse_csv():
     sys.exit()
 
 def getStuff():
-  blindList=[1,2,3,4,5,6,7,8,9,10,13,21,35,37,39,48,56,63,77,79,92,95,96,100,109,111,116,123,133,138,139,140,141,142,147,163,170,179,185,190,203,213,215,216,223,234,246]
   global hashKey
   global lat
   global lng
@@ -60,12 +61,12 @@ def check_account(username, password, count):
         api.set_position(lat, lng, random.randrange(3,170))
         api.login("ptc", username, password, False)
         #For app_simulation_login in case
-        request = self.create_request()
+        request = api.create_request()
         request.get_player()
         request.get_hatched_eggs()
         request.get_inventory()
         request.check_awarded_badges()
-        request.download_settings(hash="25b8e05b4f3fe6502e51a89c46bff17ff379cf59")
+        request.download_settings()
         response = request.call()
         time.sleep(10)
         #Checking portion
