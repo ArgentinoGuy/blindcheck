@@ -18,8 +18,9 @@ hashKey = None
 
 lat = None
 lng = None
-pkmnId = None
 expireTs = None
+
+blindList = [1,2,3,4,5,6,7,8,9,10,13,21,35,37,39,48,56,63,77,79,92,95,96,100,109,111,116,123,133,138,139,140,141,142,147,163,170,179,185,190,203,213,215,216,223,234,246]
 
 def parse_csv():
   try:
@@ -37,13 +38,11 @@ def getStuff():
   global hashKey
   global lat
   global lng
-  global pkmnId
   global expireTs
   if not hashKey:
     hashKey = raw_input("Pokehash key: ")
   lat = float(raw_input("Latitude: "))
   lng = float(raw_input("Longitude: "))
-  pkmnId = int(raw_input("Pokemon ID to check for: "))
   sec = int(raw_input("Seconds until despawn: "))
   expireTs = int(time.time()) + sec
 
@@ -62,12 +61,12 @@ def check_account(username, password, count):
         api.set_position(lat, lng, random.randrange(3,170))
         api.login("ptc", username, password, False)
         #For app_simulation_login in case
-        request = self.create_request()
+        request = api.create_request()
         request.get_player()
         request.get_hatched_eggs()
         request.get_inventory()
         request.check_awarded_badges()
-        request.download_settings(hash="54b359c97e46900f87211ef6e6dd0b7f2a3ea1f5")
+        request.download_settings()
         response = request.call()
         time.sleep(10)
         #Checking portion
@@ -90,10 +89,10 @@ def check_account(username, password, count):
           count = 0
           for cell in cells:
             for pokemons in cell.get('wild_pokemon', []):
-              if(pokemons['pokemon_id'] == pkmnId):
+              if(pokemons['pokemon_id'] in blindList):
                 count += 1
             for pokemons in cell.get('nearby_pokemons', []):
-              if(pokemons['pokemon_id'] == pkmnId):
+              if(pokemons['pokemon_id'] in blindList):
                 count += 1
           print("Found {} of the specified ID".format(count))
           if(count > 0):
